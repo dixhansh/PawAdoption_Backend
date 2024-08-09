@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PawAdoption_Backend.Models.Domain;
+using PawAdoption_Backend.Models.DTO;
 
 namespace PawAdoption_Backend.Services
 {
     public interface ITokenService
     {
-        string CreateJWTToken(IdentityUser user, List<String> roles);
+        JwtResponseDto CreateJWTToken(User user, List<String> roles);
     }
 }

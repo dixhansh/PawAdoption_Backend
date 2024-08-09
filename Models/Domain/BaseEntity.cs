@@ -3,15 +3,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PawAdoption_Backend.Models.Domain
 {
+
     public abstract class BaseEntity
     {
         [Key]
         public Guid Id { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] /*Attribute above created at will automatically populate the field in DB when a record is created*/
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] /*Here additional configuration needs to be done (done in PawAdoptionDataContext)*/
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedAt { get; set; }
     }
+
 }

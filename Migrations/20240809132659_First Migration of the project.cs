@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PawAdoption_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class FirstMigrationoftheproject : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace PawAdoption_Backend.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -34,7 +35,7 @@ namespace PawAdoption_Backend.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "DATE", nullable: false),
                     Occupation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LivingSituation = table.Column<int>(type: "int", nullable: false),
                     AdopterPetExperience = table.Column<int>(type: "int", nullable: false),
@@ -59,20 +60,6 @@ namespace PawAdoption_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IdentityRole",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalizedName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Pets",
                 columns: table => new
                 {
@@ -88,7 +75,7 @@ namespace PawAdoption_Backend.Migrations
                     AdoptionStatus = table.Column<int>(type: "int", nullable: false),
                     AdoptionDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
@@ -125,9 +112,9 @@ namespace PawAdoption_Backend.Migrations
                     AddressDetails = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     City = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     State = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    ZipCode = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
@@ -231,11 +218,11 @@ namespace PawAdoption_Backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     HealthStatus = table.Column<int>(type: "int", nullable: false),
                     IsVaccinated = table.Column<bool>(type: "bit", nullable: false),
                     IsSpayedOrNeutered = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
                 },
                 constraints: table =>
@@ -250,13 +237,23 @@ namespace PawAdoption_Backend.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "IdentityRole",
-                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1dc38c61-1a74-48c8-bdca-e10d18a2cdda", "1dc38c61-1a74-48c8-bdca-e10d18a2cdda", "Adopter", "ADOPTER" },
-                    { "ae46930c-eeed-4603-9153-d18dae47def7", "ae46930c-eeed-4603-9153-d18dae47def7", "Admin", "ADMIN" }
+                    { new Guid("1dc38c61-1a74-48c8-bdca-e10d18a2cdda"), "1dc38c61-1a74-48c8-bdca-e10d18a2cdda", "Role", "Adopter", "ADOPTER" },
+                    { new Guid("ae46930c-eeed-4603-9153-d18dae47def7"), "ae46930c-eeed-4603-9153-d18dae47def7", "Role", "Admin", "ADMIN" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "AdopterPetExperience", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastName", "LivingSituation", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Occupation", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, 0, "a05844c2-98ac-4dff-ae4b-33f6dde753f9", new DateTime(1998, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "dixhansh@paw.com", true, "Dixhansh", "Mamgain", 0, false, null, "DIXHANSH@PAW.COM", "DIXHANSH@PAW.COM", "FullStack Developer", "AQAAAAIAAYagAAAAEPBN9AvR1BLzG++qKr+QM+kl3huSsMoiYk0zd07+vjlqkdYx19lr8fLJspHeJzE1ug==", null, false, "c589c268-0ad8-4d0d-8376-f194bfac675e", false, "dixhansh@paw.com" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { new Guid("ae46930c-eeed-4603-9153-d18dae47def7"), new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9") });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AdopterAddresses_UserId",
@@ -330,9 +327,6 @@ namespace PawAdoption_Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "IdentityRole");
 
             migrationBuilder.DropTable(
                 name: "PetMedicalRecords");

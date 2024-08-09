@@ -19,7 +19,7 @@ namespace PawAdoption_Backend.Models.Domain
 
         [Required]
         [MaxLength(10)]
-        public int ZipCode { get; set; }
+        public string ZipCode { get; set; }
 
         [Required]
         public Guid UserId { get; set; }
@@ -27,8 +27,6 @@ namespace PawAdoption_Backend.Models.Domain
         //Navigational Properties
         [ForeignKey("UserId")]
         public User User { get; set; }
-
-
 
     }
 }

@@ -8,6 +8,4 @@
             SeriousIssues,
             Recovering
         }
-
-    
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using PawAdoption_Backend.Models.Domain;
+using PawAdoption_Backend.Models.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,7 +17,7 @@ namespace PawAdoption_Backend.Services
             this.configuration = configuration;
         }
 
-        public string CreateJWTToken(IdentityUser user, List<string> roles)
+        public JwtResponseDto CreateJWTToken(User user, List<string> roles)
         {
 
             var claims = new List<Claim>();
@@ -31,17 +33,22 @@ namespace PawAdoption_Backend.Services
 
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-
+            var expiration = DateTime.UtcNow.AddMinutes(30);
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],
                 configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: expiration,
                 signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return new JwtResponseDto
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                TokenType = "Bearer",
+                Expiration = expiration
+            };
 
         }
     }

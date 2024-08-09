@@ -12,8 +12,8 @@ using PawAdoption_Backend.Data;
 namespace PawAdoption_Backend.Migrations
 {
     [DbContext(typeof(PawAdoptionDataContext))]
-    [Migration("20240808142629_First Migration")]
-    partial class FirstMigration
+    [Migration("20240809132659_First Migration of the project")]
+    partial class FirstMigrationoftheproject
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,41 +25,6 @@ namespace PawAdoption_Backend.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityRole");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "ae46930c-eeed-4603-9153-d18dae47def7",
-                            ConcurrencyStamp = "ae46930c-eeed-4603-9153-d18dae47def7",
-                            Name = "Admin",
-                            NormalizedName = "ADMIN"
-                        },
-                        new
-                        {
-                            Id = "1dc38c61-1a74-48c8-bdca-e10d18a2cdda",
-                            ConcurrencyStamp = "1dc38c61-1a74-48c8-bdca-e10d18a2cdda",
-                            Name = "Adopter",
-                            NormalizedName = "ADOPTER"
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
@@ -69,6 +34,11 @@ namespace PawAdoption_Backend.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -86,6 +56,10 @@ namespace PawAdoption_Backend.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityRole<Guid>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -170,6 +144,13 @@ namespace PawAdoption_Backend.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
+                            RoleId = new Guid("ae46930c-eeed-4603-9153-d18dae47def7")
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -209,7 +190,8 @@ namespace PawAdoption_Backend.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("State")
                         .IsRequired()
@@ -224,9 +206,10 @@ namespace PawAdoption_Backend.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ZipCode")
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("Id");
 
@@ -265,7 +248,8 @@ namespace PawAdoption_Backend.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
@@ -303,7 +287,8 @@ namespace PawAdoption_Backend.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<int>("HealthStatus")
                         .HasColumnType("int");
@@ -346,8 +331,8 @@ namespace PawAdoption_Backend.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -418,6 +403,53 @@ namespace PawAdoption_Backend.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
+                            AccessFailedCount = 0,
+                            AdopterPetExperience = 0,
+                            ConcurrencyStamp = "a05844c2-98ac-4dff-ae4b-33f6dde753f9",
+                            DateOfBirth = new DateTime(1998, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Email = "dixhansh@paw.com",
+                            EmailConfirmed = true,
+                            FirstName = "Dixhansh",
+                            LastName = "Mamgain",
+                            LivingSituation = 0,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "DIXHANSH@PAW.COM",
+                            NormalizedUserName = "DIXHANSH@PAW.COM",
+                            Occupation = "FullStack Developer",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPBN9AvR1BLzG++qKr+QM+kl3huSsMoiYk0zd07+vjlqkdYx19lr8fLJspHeJzE1ug==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c589c268-0ad8-4d0d-8376-f194bfac675e",
+                            TwoFactorEnabled = false,
+                            UserName = "dixhansh@paw.com"
+                        });
+                });
+
+            modelBuilder.Entity("PawAdoption_Backend.Models.Domain.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>");
+
+                    b.HasDiscriminator().HasValue("Role");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("ae46930c-eeed-4603-9153-d18dae47def7"),
+                            ConcurrencyStamp = "ae46930c-eeed-4603-9153-d18dae47def7",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = new Guid("1dc38c61-1a74-48c8-bdca-e10d18a2cdda"),
+                            ConcurrencyStamp = "1dc38c61-1a74-48c8-bdca-e10d18a2cdda",
+                            Name = "Adopter",
+                            NormalizedName = "ADOPTER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

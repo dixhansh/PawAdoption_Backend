@@ -7,9 +7,6 @@ namespace PawAdoption_Backend.Models.Domain
     public class PetMedicalRecord : BaseEntity
     {
         [Required]
-        public Guid PetId { get; set; }
-
-        [Required]
         public PetHealthStatus HealthStatus { get; set; }
 
         [Required]
@@ -17,6 +14,10 @@ namespace PawAdoption_Backend.Models.Domain
 
         [Required]
         public bool IsSpayedOrNeutered { get; set; }
+
+        [Required]
+        public Guid PetId { get; set; }
+
 
         // Navigation property
         [ForeignKey("PetId")]

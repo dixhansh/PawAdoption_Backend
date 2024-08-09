@@ -4,20 +4,20 @@ namespace PawAdoption_Backend.Models.DTO
 {
     public class AdopterAddressDto
     {
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage = "Address details are required.")]
+        [MaxLength(100, ErrorMessage = "Address details cannot exceed 100 characters.")]
         public string AddressDetails { get; set; }
 
-        [Required]
-        [MaxLength(20)]
+        [Required(ErrorMessage = "City is required.")]
+        [MaxLength(20, ErrorMessage = "City cannot exceed 20 characters.")]
         public string City { get; set; }
 
-        [Required]
-        [MaxLength(20)]
+        [Required(ErrorMessage = "State is required.")]
+        [MaxLength(20, ErrorMessage = "State cannot exceed 20 characters.")]
         public string State { get; set; }
 
-        [Required]
-        [MaxLength(10)]
-        public int ZipCode { get; set; }
+        [Required(ErrorMessage = "Zip code is required.")]
+        [MaxLength(10, ErrorMessage = "Zip code cannot exceed 10 characters.")]
+        public string ZipCode { get; set; }  // Changed to string to handle various formats
     }
 }

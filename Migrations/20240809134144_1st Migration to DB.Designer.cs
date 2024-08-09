@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PawAdoption_Backend.Data;
 
@@ -11,9 +12,11 @@ using PawAdoption_Backend.Data;
 namespace PawAdoption_Backend.Migrations
 {
     [DbContext(typeof(PawAdoptionDataContext))]
-    partial class PawAdoptionDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240809134144_1st Migration to DB")]
+    partial class _1stMigrationtoDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PawAdoption_Backend.Data;
 
@@ -11,9 +12,11 @@ using PawAdoption_Backend.Data;
 namespace PawAdoption_Backend.Migrations
 {
     [DbContext(typeof(PawAdoptionDataContext))]
-    partial class PawAdoptionDataContextModelSnapshot : ModelSnapshot
+    [Migration("20240809133805_2nd Migration to DB")]
+    partial class _2ndMigrationtoDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -417,8 +420,8 @@ namespace PawAdoption_Backend.Migrations
                             Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
                             AccessFailedCount = 0,
                             AdopterPetExperience = 0,
-                            ConcurrencyStamp = "682b344a-bef7-4df5-bb00-c280459ebe57",
-                            CreatedAt = new DateTime(2024, 8, 9, 13, 41, 43, 985, DateTimeKind.Utc).AddTicks(3523),
+                            ConcurrencyStamp = "fb0f34dd-8133-45cc-a411-afc5db296b0f",
+                            CreatedAt = new DateTime(2024, 8, 9, 13, 38, 4, 487, DateTimeKind.Utc).AddTicks(9851),
                             DateOfBirth = new DateTime(1998, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "dixhansh@paw.com",
                             EmailConfirmed = true,
@@ -429,11 +432,11 @@ namespace PawAdoption_Backend.Migrations
                             NormalizedEmail = "DIXHANSH@PAW.COM",
                             NormalizedUserName = "DIXHANSH@PAW.COM",
                             Occupation = "FullStack Developer",
-                            PasswordHash = "AQAAAAIAAYagAAAAEF/hCfVe3XissTZGcpFJ6TKaPoPWPwj11HPqN1MFoFEWWX8UfHF+VELWjEFHZEk3Kw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECuEipXqZTy9UEylDHi2vUIPtJ4etTFn4EnMO0YbFQw10d5E3fHwOw3F8Vp2vinSow==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "c589c268-0ad8-4d0d-8376-f194bfac675e",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 8, 9, 13, 41, 43, 985, DateTimeKind.Utc).AddTicks(3526),
+                            UpdatedAt = new DateTime(2024, 8, 9, 13, 38, 4, 487, DateTimeKind.Utc).AddTicks(9853),
                             UserName = "dixhansh@paw.com"
                         });
                 });

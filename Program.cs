@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PawAdoption_Backend.Data;
+using PawAdoption_Backend.Mapping;
 using PawAdoption_Backend.Models.Domain;
+using PawAdoption_Backend.Repositories;
 using PawAdoption_Backend.Services;
 using System.Text;
 
@@ -53,13 +55,15 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<PawAdoptionDataContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("PawAdoptionDbString")));
 
+//Configuring Automapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 
 //Injecting Identity to our solution
 builder.Services.AddIdentityCore<User>()
     .AddRoles<IdentityRole<Guid>>()
     .AddTokenProvider<DataProtectorTokenProvider<User>>("PawAdoption")
     .AddEntityFrameworkStores<PawAdoptionDataContext>()
-    //.AddApiEndpoints() /*uncomment this to add default Identity endpoints*/
+    .AddApiEndpoints() /*uncomment this to add default Identity endpoints*/
     .AddDefaultTokenProviders();
 
 //Setting up IdentityOptions
@@ -88,6 +92,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 //Injecting dependencies into the container
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
 
 var app = builder.Build();
