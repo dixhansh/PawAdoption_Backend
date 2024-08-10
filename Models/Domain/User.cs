@@ -16,8 +16,7 @@ namespace PawAdoption_Backend.Models.Domain
         public string LastName { get; set; }
 
         [Required]
-        [Column(TypeName = "DATE")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
    
         [MaxLength(50)]
@@ -35,8 +34,21 @@ namespace PawAdoption_Backend.Models.Domain
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+        
         //Navigational Properties
+      
         public AdopterAddress? AdopterAddress { get; set; }
+
+      
+        public virtual ICollection<AdoptionApplication>? SubmittedApplications { get; set; } //virtual keyword enables LazyLoading
+
+      
+        public virtual ICollection<AdoptionApplication>? ProcessedApplications { get; set; }
+
+        public virtual ICollection<AdoptionBill>? AdoptionBills { get; set; }
+
+        public virtual ICollection<AdoptionBill>? ProcessedBills { get; set; }
+
 
     }
 }

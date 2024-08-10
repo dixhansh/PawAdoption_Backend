@@ -23,7 +23,7 @@ namespace PawAdoption_Backend.Models.DTO
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Date of birth is required.")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
 
         [Required(ErrorMessage = "Occupation is required.")]
         [MaxLength(50, ErrorMessage = "Occupation cannot exceed 50 characters.")]

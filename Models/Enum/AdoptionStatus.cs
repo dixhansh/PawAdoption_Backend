@@ -4,7 +4,7 @@
     {
         Available,
         AdoptionPending,
-        Adopted,
+        Adopted
     }
 
 }

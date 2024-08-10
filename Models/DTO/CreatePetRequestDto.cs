@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using PawAdoption_Backend.Models.Domain;
 using PawAdoption_Backend.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 
-namespace PawAdoption_Backend.Models.Domain
+namespace PawAdoption_Backend.Models.DTO
 {
-    public class Pet : BaseEntity
+    public class CreatePetRequestDto
     {
         [Required]
         [MaxLength(100)]
@@ -34,16 +34,8 @@ namespace PawAdoption_Backend.Models.Domain
         [Required]
         public AdoptionStatus AdoptionStatus { get; set; }
 
-        public DateOnly? AdoptionDate { get; set; }
-
         [MaxLength(1000)]
         public string? Description { get; set; }
-
-        // Navigational Properties
-        
-        public PetMedicalRecord? PetMedicalRecord { get; set; }
-
-        public virtual ICollection<AdoptionApplication>? SubmittedApplications { get; set; } //virtual keyword enables LazyLoading
 
     }
 }

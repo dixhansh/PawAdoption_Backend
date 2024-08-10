@@ -57,7 +57,7 @@ namespace PawAdoption_Backend.Data
                 EmailConfirmed = true,
                 FirstName = "Dixhansh",
                 LastName = "Mamgain",
-                DateOfBirth = new DateTime(1998, 02, 10), // Example date
+                DateOfBirth = new DateOnly(1998, 02, 10), // Example date
                 Occupation = "FullStack Developer",
                 SecurityStamp = adminSecurityStamp
             };
@@ -102,33 +102,52 @@ namespace PawAdoption_Backend.Data
                 .ValueGeneratedOnAddOrUpdate()
                 .HasDefaultValueSql("GETUTCDATE()");
 
+
+            /*Configuring relationships between entities using Fluent API*/
+            
+            // Relationship: User (Adopter) -> AdoptionApplication
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.SubmittedApplications)
+                .WithOne(a => a.Adopter)
+                .HasForeignKey(a => a.AdopterId)
+                .OnDelete(DeleteBehavior.Restrict); // Cascade delete: Deleting Adopter deletes related records in AdoptionApplication
+
+            // Relationship: User (Admin) -> AdoptionApplication
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.ProcessedApplications)
+                .WithOne(a => a.Admin)
+                .HasForeignKey(a => a.ProcessedByAdmin)
+                .OnDelete(DeleteBehavior.SetNull); // SetNull: Deleting Admin nullifies ProcessedByAdmin in AdoptionApplication
+
+            //Relationship: Pet -> AdoptionApplication
+            modelBuilder.Entity<Pet>()
+               .HasMany(u => u.SubmittedApplications)
+               .WithOne(a => a.Pet)
+               .HasForeignKey(a => a.PetId)
+               .OnDelete(DeleteBehavior.Restrict); // Restrict delete: Deleting Pet record will be restricted if there is a related record in AdoptionApplication
+
+            //Relationship: User(Adopter) -> AdoptionBill
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.AdoptionBills)
+                .WithOne(a => a.Adopter)
+                .HasForeignKey(a => a.AdopterId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            //Relationship: User(Admin) -> AdoptionBill
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.ProcessedBills)
+                .WithOne(a => a.Admin)
+                .HasForeignKey(a => a.ProcessedByAdmin)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //Relationship: AdoptionApplication -> AdoptionBill
+            modelBuilder.Entity<AdoptionApplication>()
+               .HasOne(u => u.AdoptionBill)
+               .WithOne(a => a.AdoptionApplication)
+               .HasForeignKey<AdoptionBill>(a => a.AdoptionApplicationId) //In AdoptionBill the FK is present
+               .OnDelete(DeleteBehavior.Restrict);
+
         }
-
-
-       /* public override int SaveChanges()
-        {
-            UpdateTimestamps();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            UpdateTimestamps();
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        private void UpdateTimestamps()
-        {
-            var entries = ChangeTracker.Entries()
-                .Where(e => e.Entity is BaseEntity &&
-                            (e.State == EntityState.Added || e.State == EntityState.Modified));
-
-            foreach (var entry in entries)
-            {
-                var entity = (BaseEntity)entry.Entity;
-                entity.OnBeforeSave();
-            }
-        }*/
 
     }
 }
