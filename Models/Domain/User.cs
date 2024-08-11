@@ -49,6 +49,7 @@ namespace PawAdoption_Backend.Models.Domain
 
         public virtual ICollection<AdoptionBill>? ProcessedBills { get; set; }
 
+        public virtual ICollection<UserImage>? UserImages { get; set; }
 
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PawAdoption_Backend.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigrationoftheproject : Migration
+    public partial class _1stmakingchangestoupdateAtcolumn : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -35,10 +35,12 @@ namespace PawAdoption_Backend.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "DATE", nullable: false),
+                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Occupation = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LivingSituation = table.Column<int>(type: "int", nullable: false),
                     AdopterPetExperience = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -214,6 +216,94 @@ namespace PawAdoption_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserImages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSizeInBytes = table.Column<long>(type: "bigint", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserImages_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdoptionApplication",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdopterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PetId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApplicationStatus = table.Column<int>(type: "int", nullable: false),
+                    ReferenceCheck = table.Column<bool>(type: "bit", nullable: false),
+                    ReasonOfRejection = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    IsFeePaid = table.Column<bool>(type: "bit", nullable: false),
+                    ProcessedByAdmin = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdoptionApplication", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdoptionApplication_AspNetUsers_AdopterId",
+                        column: x => x.AdopterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdoptionApplication_AspNetUsers_ProcessedByAdmin",
+                        column: x => x.ProcessedByAdmin,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_AdoptionApplication_Pets_PetId",
+                        column: x => x.PetId,
+                        principalTable: "Pets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PetImages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileExtension = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSizeInBytes = table.Column<long>(type: "bigint", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PetId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PetImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PetImages_Pets_PetId",
+                        column: x => x.PetId,
+                        principalTable: "Pets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PetMedicalRecords",
                 columns: table => new
                 {
@@ -236,6 +326,45 @@ namespace PawAdoption_Backend.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "AdoptionBill",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdoptionApplicationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdopterId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AdoptionFee = table.Column<double>(type: "float", nullable: false),
+                    PaymentStatus = table.Column<int>(type: "int", nullable: false),
+                    PaymentMethod = table.Column<int>(type: "int", nullable: false),
+                    TransactionId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DueDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    ProcessedByAdmin = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()"),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETUTCDATE()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdoptionBill", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdoptionBill_AdoptionApplication_AdoptionApplicationId",
+                        column: x => x.AdoptionApplicationId,
+                        principalTable: "AdoptionApplication",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdoptionBill_AspNetUsers_AdopterId",
+                        column: x => x.AdopterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdoptionBill_AspNetUsers_ProcessedByAdmin",
+                        column: x => x.ProcessedByAdmin,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
@@ -247,8 +376,8 @@ namespace PawAdoption_Backend.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "AdopterPetExperience", "ConcurrencyStamp", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastName", "LivingSituation", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Occupation", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, 0, "a05844c2-98ac-4dff-ae4b-33f6dde753f9", new DateTime(1998, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "dixhansh@paw.com", true, "Dixhansh", "Mamgain", 0, false, null, "DIXHANSH@PAW.COM", "DIXHANSH@PAW.COM", "FullStack Developer", "AQAAAAIAAYagAAAAEPBN9AvR1BLzG++qKr+QM+kl3huSsMoiYk0zd07+vjlqkdYx19lr8fLJspHeJzE1ug==", null, false, "c589c268-0ad8-4d0d-8376-f194bfac675e", false, "dixhansh@paw.com" });
+                columns: new[] { "Id", "AccessFailedCount", "AdopterPetExperience", "ConcurrencyStamp", "CreatedAt", "DateOfBirth", "Email", "EmailConfirmed", "FirstName", "LastName", "LivingSituation", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "Occupation", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"), 0, 0, "80ffb057-6e3a-46cb-a885-b698c54d7d43", new DateTime(2024, 8, 11, 12, 8, 55, 604, DateTimeKind.Utc).AddTicks(6580), new DateOnly(1998, 2, 10), "dixhansh@paw.com", true, "Dixhansh", "Mamgain", 0, false, null, "DIXHANSH@PAW.COM", "DIXHANSH@PAW.COM", "FullStack Developer", "AQAAAAIAAYagAAAAEJeET2PWtWEiw+GcWo54wv6sUZxVGPTo7sppFCaajoJ45bg279TYFOzSuE/AHe6nzA==", null, false, "c589c268-0ad8-4d0d-8376-f194bfac675e", false, "dixhansh@paw.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -260,6 +389,37 @@ namespace PawAdoption_Backend.Migrations
                 table: "AdopterAddresses",
                 column: "UserId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionApplication_AdopterId",
+                table: "AdoptionApplication",
+                column: "AdopterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionApplication_PetId",
+                table: "AdoptionApplication",
+                column: "PetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionApplication_ProcessedByAdmin",
+                table: "AdoptionApplication",
+                column: "ProcessedByAdmin");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionBill_AdopterId",
+                table: "AdoptionBill",
+                column: "AdopterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionBill_AdoptionApplicationId",
+                table: "AdoptionBill",
+                column: "AdoptionApplicationId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdoptionBill_ProcessedByAdmin",
+                table: "AdoptionBill",
+                column: "ProcessedByAdmin");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -301,10 +461,20 @@ namespace PawAdoption_Backend.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PetImages_PetId",
+                table: "PetImages",
+                column: "PetId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PetMedicalRecords_PetId",
                 table: "PetMedicalRecords",
                 column: "PetId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserImages_UserId",
+                table: "UserImages",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -312,6 +482,9 @@ namespace PawAdoption_Backend.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AdopterAddresses");
+
+            migrationBuilder.DropTable(
+                name: "AdoptionBill");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -329,7 +502,16 @@ namespace PawAdoption_Backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "PetImages");
+
+            migrationBuilder.DropTable(
                 name: "PetMedicalRecords");
+
+            migrationBuilder.DropTable(
+                name: "UserImages");
+
+            migrationBuilder.DropTable(
+                name: "AdoptionApplication");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

@@ -45,5 +45,7 @@ namespace PawAdoption_Backend.Models.Domain
 
         public virtual ICollection<AdoptionApplication>? SubmittedApplications { get; set; } //virtual keyword enables LazyLoading
 
+        public virtual ICollection<PetImage>? PetImages { get; set; }
+
     }
 }

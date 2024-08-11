@@ -48,7 +48,7 @@ namespace PawAdoption_Backend.Repositories
             return (medicalRecord);
         }
 
-        public async Task<Pet?> FindPetById(Guid id)
+        public async Task<Pet?> FindPetByIdAsync(Guid id)
         {
             var existingPet = await pawAdoptionDataContext.Pets.Include("PetMedicalRecord").FirstOrDefaultAsync(w => w.Id == id);
             if (existingPet == null)
@@ -164,6 +164,16 @@ namespace PawAdoption_Backend.Repositories
                 return (existingPet);
             }
             return (null);
+        }
+
+        public async Task<List<string>>? FetchAllPetImagesByIdAsync(Guid id)
+        {
+            var imageUrls = pawAdoptionDataContext.Pets
+                            .Where(p => p.Id == id) // Filter by pet ID
+                            .SelectMany(p => p.PetImages) // Select all related PetImages
+                            .Select(pi => pi.FilePath) // Select the UrlPath property
+                            .ToList(); // Convert to List
+            return (imageUrls);
         }
     }
 }

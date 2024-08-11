@@ -12,10 +12,11 @@ namespace PawAdoption_Backend.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<AdopterAddress> AdopterAddresses { get; set; }
+        public DbSet<UserImage> UserImages { get; set; }
 
         public DbSet<Pet> Pets { get; set; }
         public DbSet<PetMedicalRecord> PetMedicalRecords { get; set; }
-
+        public DbSet<PetImage> PetImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -87,7 +88,9 @@ namespace PawAdoption_Backend.Data
 
                 modelBuilder.Entity(entityType.ClrType)
                     .Property<DateTime>("UpdatedAt")
-                    .ValueGeneratedOnAddOrUpdate();
+                    .ValueGeneratedOnAddOrUpdate()
+                   .HasDefaultValueSql("GETUTCDATE()");
+
             }
 
             // Configure CreatedAt and UpdatedAt for the User entity
@@ -98,11 +101,12 @@ namespace PawAdoption_Backend.Data
 
             modelBuilder.Entity<User>()
                 .Property(u => u.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate();
+                .ValueGeneratedOnAddOrUpdate()
+               .HasDefaultValueSql("GETUTCDATE()");
 
 
             /*Configuring relationships between entities using Fluent API*/
-            
+
             // Relationship: User (Adopter) -> AdoptionApplication
             modelBuilder.Entity<User>()
                 .HasMany(u => u.SubmittedApplications)
@@ -123,6 +127,20 @@ namespace PawAdoption_Backend.Data
                .WithOne(a => a.Pet)
                .HasForeignKey(a => a.PetId)
                .OnDelete(DeleteBehavior.Restrict); // Restrict delete: Deleting Pet record will be restricted if there is a related record in AdoptionApplication
+
+            // Configure Pet -> PetImages (one-to-many)
+            modelBuilder.Entity<Pet>()
+                .HasMany(p => p.PetImages)
+                .WithOne(i => i.Pet)
+                .HasForeignKey(i => i.PetId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Configure User -> UserImages (one-to-many)
+            modelBuilder.Entity<User>()
+                .HasMany(p => p.UserImages)
+                .WithOne(i => i.User)
+                .HasForeignKey(i => i.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             //Relationship: User(Adopter) -> AdoptionBill
             modelBuilder.Entity<User>()
@@ -147,35 +165,7 @@ namespace PawAdoption_Backend.Data
 
         }
 
-        public override int SaveChanges()
-        {
-            UpdateTimestamps();
-            return base.SaveChanges();
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            UpdateTimestamps();
-            return base.SaveChangesAsync(cancellationToken);
-        }
-
-        private void UpdateTimestamps()
-        {
-            var entries = ChangeTracker.Entries<BaseEntity>();
-
-            foreach (var entry in entries)
-            {
-                if (entry.State == EntityState.Added)
-                {
-                    entry.Entity.CreatedAt = DateTime.UtcNow;
-                }
-
-                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
-                {
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
-                }
-            }
-        }
+       
 
     }
 }

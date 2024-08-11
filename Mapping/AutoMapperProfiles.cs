@@ -9,11 +9,16 @@ namespace PawAdoption_Backend.Mapping
         public AutoMapperProfiles()
         {
             CreateMap<AdopterAddressDto, AdopterAddress>().ReverseMap();
+            CreateMap<User, UserResponseDto>().ReverseMap();
 
             CreateMap<MedicalRecordDto, PetMedicalRecord>().ReverseMap();
             CreateMap<CreatePetRequestDto, Pet>().ReverseMap();
             CreateMap<Pet, PetResponseDto>().ReverseMap();
             CreateMap<MedicalRecordDto, PetMedicalRecord>().ReverseMap();
+
+            CreateMap<PetImage, ImageResponseDto>().ForMember(x => x.EntityId, opt => opt.MapFrom(x => x.Id)).ReverseMap();
+            CreateMap<UserImage, ImageResponseDto>().ForMember(x => x.EntityId, opt => opt.MapFrom(x => x.Id)).ReverseMap();
+
 
 
         }

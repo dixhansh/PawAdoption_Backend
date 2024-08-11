@@ -13,6 +13,7 @@ namespace PawAdoption_Backend.Models.Domain
         public DateTime CreatedAt { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        
         public DateTime UpdatedAt { get; set; }
     }
 

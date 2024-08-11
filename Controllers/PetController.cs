@@ -101,5 +101,17 @@ namespace PawAdoption_Backend.Controllers
             }
             return BadRequest("Updates could not be applied due to invalid Id");
         }
+
+        [HttpGet]
+        [Route("PetImages/{id:Guid}")]
+        public async Task<IActionResult> GetPetImagesById([FromRoute] Guid id)
+        {
+            var listOfImages = await petService.GetPetImagesByIdAsync(id);
+            if (listOfImages != null)
+            {
+                return Ok(listOfImages);
+            }
+            return BadRequest("Images could not be found !!!");
+        }
     }
 }

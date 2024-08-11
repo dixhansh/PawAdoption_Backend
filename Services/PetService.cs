@@ -33,7 +33,7 @@ namespace PawAdoption_Backend.Services
         public async Task<MedicalRecordDto?> UpdateMedicalRecordAsync(Guid petId, MedicalRecordDto petMedicalRecordDto)
         {
             //finding the pet
-            var existingPet = await petRepository.FindPetById(petId);
+            var existingPet = await petRepository.FindPetByIdAsync(petId);
             if (existingPet != null)
             {
                 //mapping dto to domain model
@@ -61,7 +61,7 @@ namespace PawAdoption_Backend.Services
 
         public async Task<PetResponseDto?> GetByIdAsync(Guid id)
         {
-            var pet = await petRepository.FindPetById(id);
+            var pet = await petRepository.FindPetByIdAsync(id);
             if(pet != null)
             {
                 return mapper.Map<PetResponseDto>(pet);
@@ -81,7 +81,7 @@ namespace PawAdoption_Backend.Services
         public async Task<PetResponseDto?> DeletePetAsync(Guid id)
         {
             //finding if pet exist
-            var petToDelete = await petRepository.FindPetById(id);
+            var petToDelete = await petRepository.FindPetByIdAsync(id);
             if(petToDelete != null)
             {
                 var deletedPet = await petRepository.RemovePetAsync(petToDelete);
@@ -103,6 +103,15 @@ namespace PawAdoption_Backend.Services
             return (null);
         }
 
-
+        public async Task<List<string>?> GetPetImagesByIdAsync(Guid id)
+        {
+            //finding pet from DB
+            var existingPet = await petRepository.FindPetByIdAsync(id);
+            if(existingPet != null)
+            {
+                return await petRepository.FetchAllPetImagesByIdAsync(id);
+            }
+            return (null);
+        }
     }
 }

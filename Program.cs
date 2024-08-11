@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PawAdoption_Backend.Data;
@@ -17,7 +18,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
- 
+
+//Allows to access current HttpContext
+builder.Services.AddHttpContextAccessor(); 
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -101,6 +105,8 @@ builder.Services.AddScoped<IPetService, PetService>();
 builder.Services.AddScoped<IPetRepository, PetRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepositoy, UserRepository>();
+builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
 
 
 
@@ -121,6 +127,15 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+//This middleware will allow ASP.NET app to serve static files
+app.UseStaticFiles(new StaticFileOptions
+{
+    //this the path to the physical folder(Images) in which we are saving the images
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images" //this RequestPath will redirect https://Localhost:portNo/Images request to the above FileProvider
+});
+
 
 app.MapIdentityApi<User>();
 

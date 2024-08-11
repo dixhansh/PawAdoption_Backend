@@ -12,8 +12,8 @@ using PawAdoption_Backend.Data;
 namespace PawAdoption_Backend.Migrations
 {
     [DbContext(typeof(PawAdoptionDataContext))]
-    [Migration("20240810041346_3rd Migration to DB")]
-    partial class _3rdMigrationtoDB
+    [Migration("20240811120856_1st making changes to updateAt column")]
+    partial class _1stmakingchangestoupdateAtcolumn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -242,9 +242,6 @@ namespace PawAdoption_Backend.Migrations
                     b.Property<Guid>("PetId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("ProcessedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("ProcessedByAdmin")
                         .HasColumnType("uniqueidentifier");
 
@@ -291,8 +288,8 @@ namespace PawAdoption_Backend.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
@@ -384,6 +381,50 @@ namespace PawAdoption_Backend.Migrations
                     b.ToTable("Pets");
                 });
 
+            modelBuilder.Entity("PawAdoption_Backend.Models.Domain.PetImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("FileDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<Guid?>("PetId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PetId");
+
+                    b.ToTable("PetImages");
+                });
+
             modelBuilder.Entity("PawAdoption_Backend.Models.Domain.PetMedicalRecord", b =>
                 {
                     b.Property<Guid>("Id")
@@ -441,8 +482,8 @@ namespace PawAdoption_Backend.Migrations
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETUTCDATE()");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("DATE");
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -525,9 +566,9 @@ namespace PawAdoption_Backend.Migrations
                             Id = new Guid("8e445865-a24d-4543-a6c6-9443d048cdb9"),
                             AccessFailedCount = 0,
                             AdopterPetExperience = 0,
-                            ConcurrencyStamp = "e4f3ef39-f5f2-4edc-9068-da4fbd85c031",
-                            CreatedAt = new DateTime(2024, 8, 10, 4, 13, 46, 60, DateTimeKind.Utc).AddTicks(7581),
-                            DateOfBirth = new DateTime(1998, 2, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            ConcurrencyStamp = "80ffb057-6e3a-46cb-a885-b698c54d7d43",
+                            CreatedAt = new DateTime(2024, 8, 11, 12, 8, 55, 604, DateTimeKind.Utc).AddTicks(6580),
+                            DateOfBirth = new DateOnly(1998, 2, 10),
                             Email = "dixhansh@paw.com",
                             EmailConfirmed = true,
                             FirstName = "Dixhansh",
@@ -537,13 +578,57 @@ namespace PawAdoption_Backend.Migrations
                             NormalizedEmail = "DIXHANSH@PAW.COM",
                             NormalizedUserName = "DIXHANSH@PAW.COM",
                             Occupation = "FullStack Developer",
-                            PasswordHash = "AQAAAAIAAYagAAAAENsT3BE8fMrYIzsYX4rTHwNZtYWKVAnNj/+AkuEp69lspITjQ569BA80/yN2HjJQ7w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJeET2PWtWEiw+GcWo54wv6sUZxVGPTo7sppFCaajoJ45bg279TYFOzSuE/AHe6nzA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "c589c268-0ad8-4d0d-8376-f194bfac675e",
                             TwoFactorEnabled = false,
-                            UpdatedAt = new DateTime(2024, 8, 10, 4, 13, 46, 60, DateTimeKind.Utc).AddTicks(7584),
+                            UpdatedAt = new DateTime(2024, 8, 11, 12, 8, 55, 604, DateTimeKind.Utc).AddTicks(6583),
                             UserName = "dixhansh@paw.com"
                         });
+                });
+
+            modelBuilder.Entity("PawAdoption_Backend.Models.Domain.UserImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<string>("FileDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("FileSizeInBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
+
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserImages");
                 });
 
             modelBuilder.Entity("PawAdoption_Backend.Models.Domain.Role", b =>
@@ -683,15 +768,35 @@ namespace PawAdoption_Backend.Migrations
                     b.Navigation("AdoptionApplication");
                 });
 
+            modelBuilder.Entity("PawAdoption_Backend.Models.Domain.PetImage", b =>
+                {
+                    b.HasOne("PawAdoption_Backend.Models.Domain.Pet", "Pet")
+                        .WithMany("PetImages")
+                        .HasForeignKey("PetId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Pet");
+                });
+
             modelBuilder.Entity("PawAdoption_Backend.Models.Domain.PetMedicalRecord", b =>
                 {
                     b.HasOne("PawAdoption_Backend.Models.Domain.Pet", "Pet")
-                        .WithOne("MedicalRecord")
+                        .WithOne("PetMedicalRecord")
                         .HasForeignKey("PawAdoption_Backend.Models.Domain.PetMedicalRecord", "PetId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Pet");
+                });
+
+            modelBuilder.Entity("PawAdoption_Backend.Models.Domain.UserImage", b =>
+                {
+                    b.HasOne("PawAdoption_Backend.Models.Domain.User", "User")
+                        .WithMany("UserImages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PawAdoption_Backend.Models.Domain.AdoptionApplication", b =>
@@ -701,8 +806,9 @@ namespace PawAdoption_Backend.Migrations
 
             modelBuilder.Entity("PawAdoption_Backend.Models.Domain.Pet", b =>
                 {
-                    b.Navigation("MedicalRecord")
-                        .IsRequired();
+                    b.Navigation("PetImages");
+
+                    b.Navigation("PetMedicalRecord");
 
                     b.Navigation("SubmittedApplications");
                 });
@@ -718,6 +824,8 @@ namespace PawAdoption_Backend.Migrations
                     b.Navigation("ProcessedBills");
 
                     b.Navigation("SubmittedApplications");
+
+                    b.Navigation("UserImages");
                 });
 #pragma warning restore 612, 618
         }
