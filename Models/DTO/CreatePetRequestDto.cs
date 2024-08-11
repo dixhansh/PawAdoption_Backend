@@ -34,6 +34,8 @@ namespace PawAdoption_Backend.Models.DTO
         [Required]
         public AdoptionStatus AdoptionStatus { get; set; }
 
+        public DateOnly? AdoptionDate { get; set; } = null;
+
         [MaxLength(1000)]
         public string? Description { get; set; }
 

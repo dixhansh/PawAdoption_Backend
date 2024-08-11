@@ -26,9 +26,12 @@ namespace PawAdoption_Backend.Models.DTO
 
         public AdoptionStatus AdoptionStatus { get; set; }
 
+        public DateOnly? AdoptionDate { get; set; }
+
         public string? Description { get; set; }
 
-        public MedicalRecordDto? MedicalRecordDto { get; set; }
+                                //keeping the field name same as in Pet.cs
+        public MedicalRecordDto? PetMedicalRecord { get; set; }
 
     }
 }

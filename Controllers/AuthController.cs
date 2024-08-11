@@ -15,9 +15,9 @@ namespace PawAdoption_Backend.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMapper mapper;
-        private readonly IUserService userService;
+        private readonly IAuthService userService;
 
-        public AuthController(IMapper mapper, IUserService userService)
+        public AuthController(IMapper mapper, IAuthService userService)
         {
             this.mapper = mapper;
             this.userService = userService;

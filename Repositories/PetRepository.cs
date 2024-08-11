@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using PawAdoption_Backend.Data;
 using PawAdoption_Backend.Models.Domain;
+using PawAdoption_Backend.Models.Enum;
 
 namespace PawAdoption_Backend.Repositories
 {
@@ -73,26 +74,29 @@ namespace PawAdoption_Backend.Repositories
                 {
                     pets = pets.Where(w => w.Breed != null && w.Breed.Contains(filterQuery));
                 }
-                if (filterOn.Equals("Species", StringComparison.OrdinalIgnoreCase))
-                {
-                    pets = pets.Where(w => w.Species.ToString().Contains(filterQuery));
+                    /* parsing filterQuery(string) to Species(enum).
+                     * 'true' makes methods caseInsensitive.
+                     * out var speciesValues holds the result of the parsing*/
+                if (Enum.TryParse<Species>(filterQuery, true, out var speciesValue))
+                { 
+                    pets = pets.Where(w => w.Species == speciesValue);
                 }
-                if (filterOn.Equals("Gender", StringComparison.OrdinalIgnoreCase))
+                if (Enum.TryParse<Gender>(filterQuery, true, out var genderValue))
                 {
-                    pets = pets.Where(w => w.Gender.ToString().Contains(filterQuery));
+                    pets = pets.Where(w => w.Gender == genderValue);
                 }
                 if (filterOn.Equals("Color", StringComparison.OrdinalIgnoreCase))
                 {
                     pets = pets.Where(w => w.Color.Contains(filterQuery));
                 }
-                if (filterOn.Equals("AdoptionStatus", StringComparison.OrdinalIgnoreCase))
+                if (Enum.TryParse<AdoptionStatus>(filterQuery, true, out var adoptionStatusValue))
                 {
-                    pets = pets.Where(w => w.AdoptionStatus.ToString().Contains(filterQuery));
+                    pets = pets.Where(w => w.AdoptionStatus == adoptionStatusValue);
                 }
                 //using navigational properties for filtering
-                if (filterOn.Equals("AdoptionStatus", StringComparison.OrdinalIgnoreCase))
+                if (Enum.TryParse <PetHealthStatus>(filterQuery, true, out var healthStatusValue))
                 {
-                    pets = pets.Where(w => w.PetMedicalRecord != null && w.PetMedicalRecord.HealthStatus.ToString().Contains(filterQuery)); ;
+                    pets = pets.Where(w => w.PetMedicalRecord != null && w.PetMedicalRecord.HealthStatus == healthStatusValue);
                 }
                 //add more filtering logic here
 
@@ -129,6 +133,37 @@ namespace PawAdoption_Backend.Repositories
 
             //firing the prepaired query and returnig the List<Pet>
             return await pets.Skip(skipResult).Take(pageSize).ToListAsync();
+        }
+
+        public async Task<Pet> RemovePetAsync(Pet pet)
+        {
+            pawAdoptionDataContext.Pets.Remove(pet);
+            await pawAdoptionDataContext.SaveChangesAsync();
+            return pet;
+        }
+
+        public async Task<Pet?> RenewPetRecordAsync(Guid id, Pet petUpdates)
+        {
+            //finding pet record that needs to be updated
+            var existingPet = await pawAdoptionDataContext.Pets.FindAsync(id);
+            if (existingPet != null)
+            {
+                existingPet.Name = petUpdates.Name;
+                existingPet.Species = petUpdates.Species;
+                existingPet.Breed = petUpdates.Breed;
+                existingPet.Age = petUpdates.Age;
+                existingPet.Gender = petUpdates.Gender;
+                existingPet.Color = petUpdates.Color;
+                existingPet.Weight = petUpdates.Weight;
+                existingPet.ArrivalDate = petUpdates.ArrivalDate;
+                existingPet.AdoptionStatus = petUpdates.AdoptionStatus;
+                existingPet.AdoptionDate = petUpdates.AdoptionDate;
+                existingPet.Description = petUpdates.Description;
+
+                await pawAdoptionDataContext.SaveChangesAsync();
+                return (existingPet);
+            }
+            return (null);
         }
     }
 }

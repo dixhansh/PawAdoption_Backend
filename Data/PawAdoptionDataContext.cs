@@ -87,8 +87,7 @@ namespace PawAdoption_Backend.Data
 
                 modelBuilder.Entity(entityType.ClrType)
                     .Property<DateTime>("UpdatedAt")
-                    .ValueGeneratedOnAddOrUpdate()
-                    .HasDefaultValueSql("GETUTCDATE()");
+                    .ValueGeneratedOnAddOrUpdate();
             }
 
             // Configure CreatedAt and UpdatedAt for the User entity
@@ -99,8 +98,7 @@ namespace PawAdoption_Backend.Data
 
             modelBuilder.Entity<User>()
                 .Property(u => u.UpdatedAt)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasDefaultValueSql("GETUTCDATE()");
+                .ValueGeneratedOnAddOrUpdate();
 
 
             /*Configuring relationships between entities using Fluent API*/
@@ -147,6 +145,36 @@ namespace PawAdoption_Backend.Data
                .HasForeignKey<AdoptionBill>(a => a.AdoptionApplicationId) //In AdoptionBill the FK is present
                .OnDelete(DeleteBehavior.Restrict);
 
+        }
+
+        public override int SaveChanges()
+        {
+            UpdateTimestamps();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            UpdateTimestamps();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        private void UpdateTimestamps()
+        {
+            var entries = ChangeTracker.Entries<BaseEntity>();
+
+            foreach (var entry in entries)
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Entity.CreatedAt = DateTime.UtcNow;
+                }
+
+                if (entry.State == EntityState.Added || entry.State == EntityState.Modified)
+                {
+                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                }
+            }
         }
 
     }

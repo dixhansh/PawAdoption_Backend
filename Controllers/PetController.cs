@@ -51,7 +51,7 @@ namespace PawAdoption_Backend.Controllers
         }
 
 
-        //Get all pets
+        //Get all pets(emums should be sent by name)
         [HttpGet]
         [ValidateModel]
         public async Task<IActionResult> GetAllPets([FromQuery] String? filterOn, [FromQuery] String? filterQuery, [FromQuery] String? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
@@ -65,6 +65,7 @@ namespace PawAdoption_Backend.Controllers
 
         [HttpGet]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> GetPetById([FromRoute] Guid id)
         {
             var petResponseDto = await petService.GetByIdAsync(id);
@@ -75,7 +76,30 @@ namespace PawAdoption_Backend.Controllers
             return BadRequest("Pet not found");
         }
 
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        [ValidateModel]
+        public async Task<IActionResult> DelelePet([FromRoute] Guid id)
+        {
+            var deletedPetDto = await petService.DeletePetAsync(id);
+            if(deletedPetDto != null)
+            {
+                return Ok(deletedPetDto);
+            }
+            return BadRequest("Pet record not found/deleted !");
+        }
 
-
+        [HttpPut]
+        [Route("PetRecord/{id:Guid}")]
+        [ValidateModel]
+        public async Task<IActionResult> UpdatePet([FromRoute] Guid id, [FromBody] CreatePetRequestDto petRequestDto)
+        {
+            var updatedPetResponseDto = await petService.UpdatePetAsync(id, petRequestDto);
+            if(updatedPetResponseDto != null)
+            {
+                return Ok(updatedPetResponseDto);
+            }
+            return BadRequest("Updates could not be applied due to invalid Id");
+        }
     }
 }

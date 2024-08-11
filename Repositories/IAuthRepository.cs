@@ -2,7 +2,7 @@
 
 namespace PawAdoption_Backend.Repositories
 {
-    public interface IUserRepository
+    public interface IAuthRepository
     {
         Task<AdopterAddress> AddAddressAsync(AdopterAddress adopterAddress);
     }

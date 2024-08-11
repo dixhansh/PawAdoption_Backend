@@ -9,6 +9,7 @@ namespace PawAdoption_Backend.Services
         Task<MedicalRecordDto?> UpdateMedicalRecordAsync(Guid petId,MedicalRecordDto petMedicalRecordDto);
         Task<List<PetResponseDto>> GetAllAsync(String? filterOn = null, String? filterQuery = null, String? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 100);
         Task<PetResponseDto?> GetByIdAsync(Guid id);
-       
+        Task<PetResponseDto?> DeletePetAsync(Guid id);
+        Task<PetResponseDto?> UpdatePetAsync(Guid id, CreatePetRequestDto petRequestDto);
     }
 }

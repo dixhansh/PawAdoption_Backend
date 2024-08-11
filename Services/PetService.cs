@@ -77,5 +77,32 @@ namespace PawAdoption_Backend.Services
             return (mapper.Map<List<PetResponseDto>>(petList));
 
         }
+
+        public async Task<PetResponseDto?> DeletePetAsync(Guid id)
+        {
+            //finding if pet exist
+            var petToDelete = await petRepository.FindPetById(id);
+            if(petToDelete != null)
+            {
+                var deletedPet = await petRepository.RemovePetAsync(petToDelete);
+                return (mapper.Map<PetResponseDto>(deletedPet));   
+            }
+            return null;
+        }
+
+        public async Task<PetResponseDto?> UpdatePetAsync(Guid id, CreatePetRequestDto petRequestDto)
+        {
+            //dto to domain model
+            var petUpdates = mapper.Map<Pet>(petRequestDto);
+
+            var updatedPet = await petRepository.RenewPetRecordAsync(id, petUpdates);
+            if(updatedPet != null)
+            {
+                return (mapper.Map<PetResponseDto>(updatedPet));
+            }
+            return (null);
+        }
+
+
     }
 }
