@@ -166,14 +166,13 @@ namespace PawAdoption_Backend.Repositories
             return (null);
         }
 
-        public async Task<List<string>>? FetchAllPetImagesByIdAsync(Guid id)
+        public async Task<List<PetImage>?> FetchAllPetImagesByIdAsync(Guid id)
         {
-            var imageUrls = pawAdoptionDataContext.Pets
-                            .Where(p => p.Id == id) // Filter by pet ID
-                            .SelectMany(p => p.PetImages) // Select all related PetImages
-                            .Select(pi => pi.FilePath) // Select the UrlPath property
-                            .ToList(); // Convert to List
-            return (imageUrls);
+            var imageList =  await pawAdoptionDataContext.Pets
+                                  .Where(p => p.Id == id) // Filter by pet ID
+                                  .SelectMany(p => p.PetImages) // Select all related PetImages
+                                  .ToListAsync(); // Convert to List
+            return (imageList);
         }
     }
 }

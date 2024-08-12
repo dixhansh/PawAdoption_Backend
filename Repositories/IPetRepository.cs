@@ -11,6 +11,6 @@ namespace PawAdoption_Backend.Repositories
         Task<List<Pet>> GetAllFromDbAsync(String? filterOn = null, String? filterQuery = null, String? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 100);
         Task<Pet> RemovePetAsync(Pet pet);
         Task<Pet?> RenewPetRecordAsync(Guid id, Pet petUpdates);
-        Task<List<string>?> FetchAllPetImagesByIdAsync(Guid id);
+        Task<List<PetImage>?> FetchAllPetImagesByIdAsync(Guid id);
     }
 }

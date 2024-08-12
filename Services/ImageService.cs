@@ -67,11 +67,11 @@ namespace PawAdoption_Backend.Services
             {
                 return ("pet");
             }
-          /*  var userEntity = await userRepositoy.FindUserByIdAsync(entityId);
+            var userEntity = await userRepositoy.FindUserById(entityId);
             if (userEntity != null)
             {
                 return ("user");
-            }*/
+            }
             return (null);
 
         }

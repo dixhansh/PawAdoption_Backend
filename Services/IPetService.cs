@@ -11,6 +11,6 @@ namespace PawAdoption_Backend.Services
         Task<PetResponseDto?> GetByIdAsync(Guid id);
         Task<PetResponseDto?> DeletePetAsync(Guid id);
         Task<PetResponseDto?> UpdatePetAsync(Guid id, CreatePetRequestDto petRequestDto);
-        Task<List<string>?> GetPetImagesByIdAsync(Guid id);
+        Task<List<ImageResponseDto>?> GetPetImagesByIdAsync(Guid id);
     }
 }

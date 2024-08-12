@@ -103,13 +103,15 @@ namespace PawAdoption_Backend.Services
             return (null);
         }
 
-        public async Task<List<string>?> GetPetImagesByIdAsync(Guid id)
+        public async Task<List<ImageResponseDto>?> GetPetImagesByIdAsync(Guid id)
         {
             //finding pet from DB
             var existingPet = await petRepository.FindPetByIdAsync(id);
             if(existingPet != null)
             {
-                return await petRepository.FetchAllPetImagesByIdAsync(id);
+                var petImageList = await petRepository.FetchAllPetImagesByIdAsync(id);
+                //domain model to dto 
+                return(mapper.Map<List<ImageResponseDto>>(petImageList));
             }
             return (null);
         }

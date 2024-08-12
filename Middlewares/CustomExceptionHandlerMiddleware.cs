@@ -47,8 +47,7 @@ namespace PawAdoption_Backend.Middlewares
             var errorResponse = new
             {
                 Id = errorId,
-                ErrorMessage = env.IsDevelopment() ? ex.Message : genericErrorMessage,
-                StackTrace = env.IsDevelopment() ? ex.StackTrace : null
+                ErrorMessage = env.IsDevelopment() ? ex.Message : (statusCode == HttpStatusCode.BadRequest || statusCode == HttpStatusCode.Unauthorized) ? ex.Message : genericErrorMessage
             };
 
             httpContext.Response.StatusCode = (int)statusCode;
