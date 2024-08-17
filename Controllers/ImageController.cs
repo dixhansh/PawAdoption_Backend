@@ -33,6 +33,21 @@ namespace PawAdoption_Backend.Controllers
             
         }
 
+        //delete an image with entity and image id
+        [HttpDelete]
+        [Route("Delete/{imageId:Guid}/{entityId:Guid}")]
+        public async Task<IActionResult> DeleteImage([FromRoute] Guid imageId,[FromRoute] Guid entityId)
+        {
+            var result = await imageService.DeleteImageAsync(imageId, entityId);
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            return BadRequest("Invalid credentials, image not deleted!");
+        }
+
+
+
 
         //Validating image
         private void ValidateFileUpload(ImageUploadRequestDto requestDto)
@@ -50,6 +65,8 @@ namespace PawAdoption_Backend.Controllers
             }
 
         }
+
+
 
 
 

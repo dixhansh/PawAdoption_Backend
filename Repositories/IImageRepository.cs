@@ -6,5 +6,6 @@ namespace PawAdoption_Backend.Repositories
     {
         Task<PetImage> UploadPetImageAsync(PetImage petImage);
         Task<UserImage> UploadUserImageAsync(UserImage userImage);
+        Task<string?> RemovePetImageByIdAsync(Guid imageId);
     }
 }

@@ -12,8 +12,7 @@ namespace PawAdoption_Backend.Models.Domain
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatedAt { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)] 
         public DateTime UpdatedAt { get; set; }
     }
 

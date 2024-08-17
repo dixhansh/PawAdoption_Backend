@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using PawAdoption_Backend.Data;
 using PawAdoption_Backend.Models.Domain;
@@ -10,7 +11,6 @@ namespace PawAdoption_Backend.Services
     public class AuthService : IAuthService
     {
         private readonly UserManager<User> userManager;
-
         private readonly PawAdoptionDataContext pawAdoptionDataContext;
         private readonly ITokenService tokenService;
         private readonly IAuthRepository userRepository;
@@ -54,8 +54,19 @@ namespace PawAdoption_Backend.Services
                     var roles = await userManager.GetRolesAsync(user);
                     if (roles != null)
                     {
+
                         //Creating the JWT Token 
-                        return tokenService.CreateJWTToken(user, roles.ToList());
+                        var jwtRenposedto = tokenService.CreateJWTToken(user, roles.ToList());
+
+                        jwtRenposedto.Id = user.Id;
+                        jwtRenposedto.FirstName = user.FirstName;
+                        jwtRenposedto.LastName = user.LastName;
+                        jwtRenposedto.Email = user.Email;
+                        jwtRenposedto.DateOfBirth = user.DateOfBirth;
+                        jwtRenposedto.Role = roles;
+
+                        return jwtRenposedto;
+
                     }
                 }
             }

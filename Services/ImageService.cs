@@ -58,7 +58,25 @@ namespace PawAdoption_Backend.Services
             return (null);
         }
 
-       
+        public async Task<string?> DeleteImageAsync(Guid imageId, Guid entityId)
+        {
+            var entity = await CheckEntityType(entityId);
+
+            if (entity != null && entity.Contains("pet"))
+            {
+                var result = await imageRepository.RemovePetImageByIdAsync(imageId);
+                if (result != null)
+                {
+                    return(result);
+                }
+            }
+            if (entity != null && entity.Contains("user"))
+            {
+               
+            }
+            return (null);
+        }
+
         //Finding which entityId belongs to which table 
         private async Task<string?> CheckEntityType(Guid entityId)
         {
@@ -75,6 +93,9 @@ namespace PawAdoption_Backend.Services
             return (null);
 
         }
+
        
+
+
     }
 }

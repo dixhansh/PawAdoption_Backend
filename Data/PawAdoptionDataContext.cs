@@ -17,6 +17,8 @@ namespace PawAdoption_Backend.Data
         public DbSet<Pet> Pets { get; set; }
         public DbSet<PetMedicalRecord> PetMedicalRecords { get; set; }
         public DbSet<PetImage> PetImages { get; set; }
+        public DbSet<AdoptionApplication> AdoptionApplications { get; set; }
+        public DbSet<AdoptionBill> AdoptionBills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

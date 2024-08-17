@@ -7,6 +7,7 @@ namespace PawAdoption_Backend.Models.DTO
 {
     public class UserResponseDto
     { 
+
         public Guid Id { get; set; }
 
         public string FirstName { get; set; }

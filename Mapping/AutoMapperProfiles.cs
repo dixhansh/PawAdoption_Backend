@@ -8,6 +8,7 @@ namespace PawAdoption_Backend.Mapping
     {
         public AutoMapperProfiles()
         {
+
             CreateMap<AdopterAddressDto, AdopterAddress>().ReverseMap();
             CreateMap<User, UserResponseDto>().ReverseMap();
             CreateMap<User, UserRequestDto>().ReverseMap();
@@ -20,7 +21,7 @@ namespace PawAdoption_Backend.Mapping
             CreateMap<PetImage, ImageResponseDto>().ForMember(x => x.EntityId, opt => opt.MapFrom(x => x.PetId)).ReverseMap();
             CreateMap<UserImage, ImageResponseDto>().ForMember(x => x.EntityId, opt => opt.MapFrom(x => x.UserId)).ReverseMap();
 
-
+            CreateMap<AdoptionApplication, AdoptionApplicatonResponseDto>().ReverseMap();
 
         }
     }

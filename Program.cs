@@ -19,6 +19,19 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Configure CORS directly within the app services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
+
 //Allows to access current HttpContext
 builder.Services.AddHttpContextAccessor(); 
 
@@ -107,10 +120,14 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepositoy, UserRepository>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<IImageRepository, LocalImageRepository>();
-
+builder.Services.AddScoped<IAdoptionApplicationService, AdoptionApplicationService>();
+builder.Services.AddScoped<IAdoptionApplicationRepository, AdoptionApplicationRepositoy>();
 
 
 var app = builder.Build();
+
+// Enable CORS before routing middleware
+app.UseCors("AllowSpecificOrigins");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -122,7 +139,7 @@ if (app.Environment.IsDevelopment())
 //Setting up GlobalExceptionHandling Middleware
 app.UseMiddleware<CustomExceptionHandlerMiddleware>();
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection(); disabling of testing purpose 
 
 app.UseAuthentication();
 
